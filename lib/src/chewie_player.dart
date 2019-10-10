@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:chewie/src/chewie_progress_colors.dart';
+import 'package:chewie/src/player_controller.dart';
 import 'package:chewie/src/player_with_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,9 +40,15 @@ class Chewie extends StatefulWidget {
 
 class ChewieState extends State<Chewie> {
   bool _isFullScreen = false;
-
+  bool _triggeredByUser = false;
+  PlayerController playerController;
+  // PlayerController
   @override
   void initState() {
+    playerController = PlayerController();
+    playerController.callback = (){
+      _pushFullScreenWidget(context, false);
+    };
     super.initState();
     widget.controller.addListener(listener);
   }
@@ -129,15 +136,47 @@ class ChewieState extends State<Chewie> {
         );
       }
   );
-    if (widget.controller.routePageBuilder == null) {
-      return _defaultRoutePageBuilder(
-          context, animation, secondaryAnimation, controllerProvider);
-    }
-    return widget.controller.routePageBuilder(
-        context, animation, secondaryAnimation, controllerProvider);
+    // if (widget.controller.routePageBuilder == null) {
+    //   return _defaultRoutePageBuilder(
+    //       context, animation, secondaryAnimation, controllerProvider);
+    // }
+    // return widget.controller.routePageBuilder(
+    //     context, animation, secondaryAnimation, controllerProvider);
   }
+// Future<dynamic> _pushFullScreenWidget(BuildContext context,
+//       [bool triggeredByUser = true]) async {
+//     final TransitionRoute<Null> route = PageRouteBuilder<Null>(
+//       settings: RouteSettings(isInitialRoute: false),
+//       pageBuilder: _fullScreenRoutePageBuilder,
+//     );
 
-  Future<dynamic> _pushFullScreenWidget(BuildContext context) async {
+//     SystemChrome.setEnabledSystemUIOverlays([]);
+//     if (triggeredByUser) {
+//       SystemChrome.setPreferredOrientations([
+//         DeviceOrientation.landscapeLeft,
+//         DeviceOrientation.landscapeRight,
+//       ]);
+//       _triggeredByUser = true;
+//     }
+
+//     _isFullScreen = true;
+//     await Navigator.of(context).push(route);
+//     _isFullScreen = false;
+
+//     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+//     if (triggeredByUser) {
+//       SystemChrome.setPreferredOrientations(
+//         const [
+//           DeviceOrientation.portraitUp,
+//           DeviceOrientation.portraitDown,
+//           DeviceOrientation.landscapeLeft,
+//           DeviceOrientation.landscapeRight,
+//         ],
+//       );
+//       _triggeredByUser = false;
+//     }
+//   }
+  Future<dynamic> _pushFullScreenWidget(BuildContext context, [bool triggeredByUser = true]) async {
     final isAndroid = Theme.of(context).platform == TargetPlatform.android;
     final TransitionRoute<Null> route = PageRouteBuilder<Null>(
       settings: RouteSettings(isInitialRoute: false),
