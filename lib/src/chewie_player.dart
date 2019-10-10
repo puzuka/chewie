@@ -22,12 +22,15 @@ class Chewie extends StatefulWidget {
   Chewie({
     Key key,
     this.controller,
+    this.streamSubWidget
   })  : assert(controller != null, 'You must provide a chewie controller'),
         super(key: key);
 
   /// The [ChewieController]
   final ChewieController controller;
 
+  // Widget Sub 
+  final Widget streamSubWidget;
   @override
   ChewieState createState() {
     return ChewieState();
@@ -112,6 +115,20 @@ class ChewieState extends State<Chewie> {
       child: PlayerWithControls(),
     );
 
+  return AnimatedBuilder(
+      animation: animation,
+      builder: (BuildContext context, Widget child) {
+        return Scaffold(
+      resizeToAvoidBottomPadding: false,
+            body: Stack(
+          children: <Widget>[
+            controllerProvider,
+            widget.streamSubWidget
+          ]
+        )
+        );
+      }
+  );
     if (widget.controller.routePageBuilder == null) {
       return _defaultRoutePageBuilder(
           context, animation, secondaryAnimation, controllerProvider);
