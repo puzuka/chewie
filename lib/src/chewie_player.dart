@@ -162,9 +162,9 @@ Future<dynamic> _pushFullScreenWidget(BuildContext context,
       
     }
 
-    _isFullScreen = !_isFullScreen;
+    _isFullScreen = true;
     await Navigator.of(context).push(route);
-    
+    _isFullScreen = false;
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     if (triggeredByUser) {
       SystemChrome.setPreferredOrientations(
