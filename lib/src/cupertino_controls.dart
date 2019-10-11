@@ -389,20 +389,23 @@ class _CupertinoControlsState extends State<CupertinoControls> {
       height: barHeight,
       margin: EdgeInsets.only(
         top: marginSize,
-        right: marginSize,
+        right: marginSize + 20,
         left: marginSize,
+        
       ),
       child: Row(
         children: <Widget>[
-          chewieController.allowFullScreen
-              ? _buildExpandButton(
-                  backgroundColor, iconColor, barHeight, buttonPadding)
-              : Container(),
-          Expanded(child: Container()),
           chewieController.allowMuting
               ? _buildMuteButton(controller, backgroundColor, iconColor,
                   barHeight, buttonPadding)
               : Container(),
+          Expanded(child: Container()),
+          chewieController.allowFullScreen
+              ? _buildExpandButton(
+                  backgroundColor, iconColor, barHeight, buttonPadding)
+              : Container(),
+          
+          
         ],
       ),
     );
