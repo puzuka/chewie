@@ -2,7 +2,7 @@ class PlayerController {
 
   static PlayerController instance;
 
-  Function() callback;
+  Function(bool isFull) callback;
 
   factory PlayerController () {
     if(instance == null)

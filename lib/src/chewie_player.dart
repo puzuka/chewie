@@ -46,8 +46,9 @@ class ChewieState extends State<Chewie> {
   @override
   void initState() {
     playerController = PlayerController();
-    playerController.callback = (){
-      _pushFullScreenWidget(context, false);
+    playerController.callback = (isFull){
+      isFull = (isFull == null) ? false : true;
+      _pushFullScreenWidget(context, isFull);
     };
     super.initState();
     widget.controller.addListener(listener);
@@ -143,72 +144,74 @@ class ChewieState extends State<Chewie> {
     // return widget.controller.routePageBuilder(
     //     context, animation, secondaryAnimation, controllerProvider);
   }
-// Future<dynamic> _pushFullScreenWidget(BuildContext context,
-//       [bool triggeredByUser = true]) async {
-//     final TransitionRoute<Null> route = PageRouteBuilder<Null>(
-//       settings: RouteSettings(isInitialRoute: false),
-//       pageBuilder: _fullScreenRoutePageBuilder,
-//     );
-
-//     SystemChrome.setEnabledSystemUIOverlays([]);
-//     if (triggeredByUser) {
-//       SystemChrome.setPreferredOrientations([
-//         DeviceOrientation.landscapeLeft,
-//         DeviceOrientation.landscapeRight,
-//       ]);
-//       _triggeredByUser = true;
-//     }
-
-//     _isFullScreen = true;
-//     await Navigator.of(context).push(route);
-//     _isFullScreen = false;
-
-//     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-//     if (triggeredByUser) {
-//       SystemChrome.setPreferredOrientations(
-//         const [
-//           DeviceOrientation.portraitUp,
-//           DeviceOrientation.portraitDown,
-//           DeviceOrientation.landscapeLeft,
-//           DeviceOrientation.landscapeRight,
-//         ],
-//       );
-//       _triggeredByUser = false;
-//     }
-//   }
-  Future<dynamic> _pushFullScreenWidget(BuildContext context, [bool triggeredByUser = true]) async {
-    final isAndroid = Theme.of(context).platform == TargetPlatform.android;
+Future<dynamic> _pushFullScreenWidget(BuildContext context,
+      [bool triggeredByUser = true]) async {
     final TransitionRoute<Null> route = PageRouteBuilder<Null>(
       settings: RouteSettings(isInitialRoute: false),
       pageBuilder: _fullScreenRoutePageBuilder,
     );
 
     SystemChrome.setEnabledSystemUIOverlays([]);
-    if (isAndroid) {
+    if (triggeredByUser) {
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.landscapeLeft,
         DeviceOrientation.landscapeRight,
       ]);
+      _triggeredByUser = true;
+      _isFullScreen = true;
+      
     }
 
-    if (!widget.controller.allowedScreenSleep) {
-      Screen.keepOn(true);
-    }
-
+    _isFullScreen = !_isFullScreen;
     await Navigator.of(context).push(route);
-    _isFullScreen = false;
-    widget.controller.exitFullScreen();
-
-    bool isKeptOn = await Screen.isKeptOn;
-    if (isKeptOn) {
-      Screen.keepOn(false);
+    
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    if (triggeredByUser) {
+      SystemChrome.setPreferredOrientations(
+        const [
+          DeviceOrientation.portraitUp,
+          DeviceOrientation.portraitDown,
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight,
+        ],
+      );
+      _triggeredByUser = false;
+      _isFullScreen = false;
     }
-
-    SystemChrome.setEnabledSystemUIOverlays(
-        widget.controller.systemOverlaysAfterFullScreen);
-    SystemChrome.setPreferredOrientations(
-        widget.controller.deviceOrientationsAfterFullScreen);
   }
+  // Future<dynamic> _pushFullScreenWidget(BuildContext context, [bool triggeredByUser = true]) async {
+  //   final isAndroid = Theme.of(context).platform == TargetPlatform.android;
+  //   final TransitionRoute<Null> route = PageRouteBuilder<Null>(
+  //     settings: RouteSettings(isInitialRoute: false),
+  //     pageBuilder: _fullScreenRoutePageBuilder,
+  //   );
+
+  //   SystemChrome.setEnabledSystemUIOverlays([]);
+  //   if (isAndroid) {
+  //     SystemChrome.setPreferredOrientations([
+  //       DeviceOrientation.landscapeLeft,
+  //       DeviceOrientation.landscapeRight,
+  //     ]);
+  //   }
+
+  //   if (!widget.controller.allowedScreenSleep) {
+  //     Screen.keepOn(true);
+  //   }
+
+  //   await Navigator.of(context).push(route);
+  //   _isFullScreen = false;
+  //   widget.controller.exitFullScreen();
+
+  //   bool isKeptOn = await Screen.isKeptOn;
+  //   if (isKeptOn) {
+  //     Screen.keepOn(false);
+  //   }
+
+  //   SystemChrome.setEnabledSystemUIOverlays(
+  //       widget.controller.systemOverlaysAfterFullScreen);
+  //   SystemChrome.setPreferredOrientations(
+  //       widget.controller.deviceOrientationsAfterFullScreen);
+  // }
 }
 
 /// The ChewieController is used to configure and drive the Chewie Player
