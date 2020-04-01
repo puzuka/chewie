@@ -77,7 +77,8 @@ class _CupertinoControlsState extends State<CupertinoControls> {
           absorbing: _hideStuff,
           child: Column(
             children: <Widget>[
-              _buildTopBar(backgroundColor, iconColor, barHeight, buttonPadding),
+              _buildTopBar(
+                  backgroundColor, iconColor, barHeight, buttonPadding),
               _buildHitArea(),
               _buildBottomBar(backgroundColor, iconColor, barHeight),
             ],
@@ -389,23 +390,20 @@ class _CupertinoControlsState extends State<CupertinoControls> {
       height: barHeight,
       margin: EdgeInsets.only(
         top: marginSize,
-        right: marginSize + 20,
+        right: marginSize,
         left: marginSize,
-        
       ),
       child: Row(
         children: <Widget>[
-          chewieController.allowMuting
-              ? _buildMuteButton(controller, backgroundColor, iconColor,
-                  barHeight, buttonPadding)
-              : Container(),
-          Expanded(child: Container()),
           chewieController.allowFullScreen
               ? _buildExpandButton(
                   backgroundColor, iconColor, barHeight, buttonPadding)
               : Container(),
-          
-          
+          Expanded(child: Container()),
+          chewieController.allowMuting
+              ? _buildMuteButton(controller, backgroundColor, iconColor,
+                  barHeight, buttonPadding)
+              : Container(),
         ],
       ),
     );
@@ -498,7 +496,15 @@ class _CupertinoControlsState extends State<CupertinoControls> {
   }
 
   void _playPause() {
-    bool isFinished = _latestValue.position >= _latestValue.duration;
+      bool isFinished;
+      if( _latestValue.duration != null)
+      {
+        isFinished = _latestValue.position >= _latestValue.duration;
+      }
+      else
+      {
+        isFinished = false;
+      }
 
     setState(() {
       if (controller.value.isPlaying) {
