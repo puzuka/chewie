@@ -1,4 +1,10 @@
-# Changelog
+## 0.9.10
+
+* Remove `isInitialRoute` from full screen page route
+
+## 0.9.9
+
+* Changed wakelock plugin from `flutter_screen` to `wakelock` due to lack of maintenance of `flutter_screen`. 
 
 ## 0.9.8+1
   * Require latest flutter stable version

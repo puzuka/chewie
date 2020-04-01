@@ -77,7 +77,8 @@ class _CupertinoControlsState extends State<CupertinoControls> {
           absorbing: _hideStuff,
           child: Column(
             children: <Widget>[
-              _buildTopBar(backgroundColor, iconColor, barHeight, buttonPadding),
+              _buildTopBar(
+                  backgroundColor, iconColor, barHeight, buttonPadding),
               _buildHitArea(),
               _buildBottomBar(backgroundColor, iconColor, barHeight),
             ],
@@ -498,7 +499,15 @@ class _CupertinoControlsState extends State<CupertinoControls> {
   }
 
   void _playPause() {
-    bool isFinished = _latestValue.position >= _latestValue.duration;
+      bool isFinished;
+      if( _latestValue.duration != null)
+      {
+        isFinished = _latestValue.position >= _latestValue.duration;
+      }
+      else
+      {
+        isFinished = false;
+      }
 
     setState(() {
       if (controller.value.isPlaying) {
